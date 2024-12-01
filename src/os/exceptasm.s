@@ -628,13 +628,20 @@ cart:
     lw      sp, HWINTR_SP(t1)
     jalr    t2
 
+    /* For reasons that are unclear to me, SBK2 expects these
+     * instructions to be re-ordered in a way that Ultra does
+     * not normally do.
+     */
+    .set noreorder
     beqz    v0, 1f
+    li      a0, MESG(OS_EVENT_CART)
+    .set reorder
+
     /* Redispatch immediately if the callback returned nonzero */
     b       redispatch
 
 1:
     /* Post a cart event message */
-    li      a0, MESG(OS_EVENT_CART)
     jal     send_mesg
     /* Continue */
     b       next_interrupt
