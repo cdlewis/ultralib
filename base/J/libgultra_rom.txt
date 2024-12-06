@@ -415,3 +415,4 @@ afterprenmi.o
 getmemsize.o
 initialize.o
 assert.o
+driverominit.o
