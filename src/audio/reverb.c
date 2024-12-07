@@ -70,10 +70,9 @@ Acmd *alFxPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset,
 #ifdef AUD_PROFILE
     lastCnt[++cnt_index] = osGetCount();
 #endif
-#if BUILD_VERSION < VERSION_J
-#line 74
-#endif
-    assert(source);
+
+
+    force_assert(source);
 
     /*
      * pull channels going into this effect first
