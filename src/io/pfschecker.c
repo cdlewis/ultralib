@@ -205,7 +205,7 @@ s32 corrupted_init(OSPfs* pfs, __OSInodeCache* cache) {
 
             if (tpage.ipage >= pfs->inode_start_page && tpage.inode_t.bank != bank) {
 #if BUILD_VERSION >= VERSION_J
-                n = ((tpage.inode_t.page & 0x7F) / PFS_SECTOR_SIZE) +
+                n = ((tpage.inode_t.page & 0xFF) / PFS_SECTOR_SIZE) +
                     ((tpage.inode_t.bank % PFS_BANK_LAPPED_BY) * BLOCKSIZE);
 #else
                 n = ((tpage.inode_t.page) / PFS_SECTOR_SIZE) +
