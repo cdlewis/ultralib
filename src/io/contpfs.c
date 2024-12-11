@@ -129,11 +129,9 @@ s32 __osRepairPackId(OSPfs* pfs, __OSPackId* badid, __OSPackId* newid) {
 
     for (i = 0; i < BLOCKSIZE; i++) {
         if (temp[i] != ((u8*)newid)[i]) {
-#if BUILD_VERSION >= VERSION_J
-            return PFS_ERR_DEVICE;
-#else
+
             return PFS_ERR_ID_FATAL;
-#endif
+
         }
     }
     return 0;
