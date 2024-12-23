@@ -1,10 +1,11 @@
 #include "PRinternal/piint.h"
 #include "PR/ultraerror.h"
-#include "assert.h"
 
 
 
 
+extern void __assert(const char *, const char *, int);
+#define force_assert(EX)  ((EX)?((void)0):__assert("EX", __FILE__, __LINE__))
 
 
 
@@ -39,10 +40,12 @@ s32 __osEPiRawReadIo(OSPiHandle* pihandle, u32 devAddr, u32* data) {
         return -1;
     }
 #endif
-    assert(data != NULL);
+    force_assert(data != NULL);
 
     EPI_SYNC(pihandle, stat, domain);
     *data = IO_READ(pihandle->baseAddress | devAddr);
 
     return 0;
 }
+
+static const int pad[] = {0, 0, 0};
