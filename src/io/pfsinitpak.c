@@ -3,14 +3,8 @@
 #include "PRinternal/controller.h"
 #include "PRinternal/siint.h"
 
-#if BUILD_VERSION >= VERSION_J
-static s32 __osPfsCheckRamArea(OSPfs* pfs);
-#endif
-
 s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
-#if BUILD_VERSION < VERSION_J
     int k;
-#endif
     s32 ret = 0;
     u16 sum;
     u16 isum;
@@ -32,9 +26,6 @@ s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
     pfs->channel = channel;
     pfs->status = 0;
 
-#if BUILD_VERSION >= VERSION_J
-    ERRCK(__osPfsCheckRamArea(pfs));
-#endif
     ERRCK(SELECT_BANK(pfs, 0));
     ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, temp));
 
@@ -101,30 +92,3 @@ s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
 
     return ret;
 }
-
-#if BUILD_VERSION >= VERSION_J
-static s32 __osPfsCheckRamArea(OSPfs* pfs) {
-    s32 i;
-    s32 ret = 0;
-    u8 temp1[BLOCKSIZE];
-    u8 temp2[BLOCKSIZE];
-    u8 save[BLOCKSIZE];
-
-    ERRCK(SELECT_BANK(pfs, PFS_ID_BANK_256K));
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, save));
-
-    for (i = 0; i < BLOCKSIZE; i++) {
-        temp1[i] = i;
-    }
-
-    ERRCK(__osContRamWrite(pfs->queue, pfs->channel, 0, temp1, FALSE));
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, temp2));
-
-    if (bcmp(temp1, temp2, BLOCKSIZE) != 0) {
-        return PFS_ERR_DEVICE;
-    }
-
-    ret = __osContRamWrite(pfs->queue, pfs->channel, 0, save, FALSE);
-    return ret;
-}
-#endif
