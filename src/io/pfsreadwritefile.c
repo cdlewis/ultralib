@@ -117,10 +117,5 @@ s32 osPfsReadWriteFile(OSPfs* pfs, s32 file_no, u8 flag, int offset, int size_in
         ERRCK(__osContRamWrite(pfs->queue, pfs->channel, pfs->dir_table + file_no, (u8*)&dir, FALSE));
     }
 
-#if BUILD_VERSION >= VERSION_J
-    ret = __osPfsGetStatus(pfs->queue, pfs->channel);
-    return ret;
-#else
     return 0;
-#endif
 }
